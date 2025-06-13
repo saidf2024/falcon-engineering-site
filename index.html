@@ -2,134 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Tank Turret SPA</title>
+  <title>Falcon Engineering</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      font-family: sans-serif;
-      background: #e0e0e0;
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; overflow: hidden; font-family: sans-serif; background: linear-gradient(135deg, #d2cbcb, #262424); }
+
+    .tank-image {
+      position: fixed; bottom: 30px; left: 50px;
+      width: 150px; height: auto;
+      z-index: 10; pointer-events: none; user-select: none;
     }
 
     .turret {
-      position: fixed;
-      left: 40px;
-      bottom: 30%;
-      width: 100px;
-      height: 100px;
-    }
-
-    .turret-base {
-      width: 60px;
-      height: 60px;
-      background: #555;
-      border-radius: 50%;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      box-shadow: inset 0 0 5px #000;
-    }
-
-    .turret-barrel {
-      width: 80px;
-      height: 14px;
-      background: #333;
-      position: absolute;
-      top: 23px;
-      left: 25px;
+      position: fixed; left: 120px; bottom: 100px;
+      width: 60px; height: 10px;
+      background: #333; border-radius: 5px;
       transform-origin: left center;
-      border-radius: 5px;
-      z-index: 2;
+      z-index: 20; pointer-events: none;
     }
 
     .nav-bar {
-      position: fixed;
-      top: 50%;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      transform: translateY(-50%);
-      gap: 10px;
+      position: fixed; top: 50%; right: 20px;
+      display: flex; flex-direction: column; transform: translateY(-50%);
+      gap: 10px; z-index: 30;
     }
 
     .nav-bar button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      background: #333;
-      color: #fff;
-      border-radius: 4px;
+      padding: 20px 40px; font-size: 16px;
+      background: #333; color: #fff;
+      border: none; border-radius: 4px; cursor: pointer;
       transition: background 0.3s;
     }
+    .nav-bar button:hover { background: #555; }
 
-    .nav-bar button:hover {
-      background: #555;
+    .pulse-icon {
+      margin-right: 8px; color: #f00;
+      animation: pulse 1.2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
     }
 
     .projectile {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      background: red;
-      border-radius: 50%;
-      display: none;
-      z-index: 10;
-    }
-
-    .smoke {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      background: rgba(50, 50, 50, 0.4);
-      border-radius: 50%;
-      pointer-events: none;
-      animation: fadeOut 0.5s forwards;
-      z-index: 5;
-    }
-
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        transform: scale(1.5);
-      }
+      position: fixed; width: 10px; height: 10px;
+      background: red; border-radius: 50%;
+      display: none; z-index: 40; pointer-events: none;
     }
 
     .muzzle-flash, .impact-spark {
-      position: fixed;
-      width: 20px;
-      height: 20px;
-      background: yellow;
-      border-radius: 50%;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 20;
-      box-shadow: 0 0 20px 10px yellow;
+      position: fixed; width: 20px; height: 20px;
+      background: yellow; border-radius: 50%;
+      opacity: 0; z-index: 45;
+      pointer-events: none; box-shadow: 0 0 20px 10px yellow;
+      transition: opacity 0.1s ease;
+    }
+
+    .smoke {
+      position: fixed; width: 10px; height: 10px;
+      background: rgba(50, 50, 50, 0.4);
+      border-radius: 50%; pointer-events: none;
+      animation: fadeOut 0.5s forwards;
+      z-index: 35;
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; transform: scale(1.5); }
     }
 
     .page-content {
-      position: absolute;
-      top: 20px;
-      left: 140px;
-      max-width: 600px;
-      padding: 20px;
-      background: #fff;
-      border-radius: 8px;
+      position: absolute; top: 20px; left: 140px;
+      max-width: 600px; padding: 20px;
+      background: #fff; border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      z-index: 15;
     }
+
+    .media-modal {
+      display: none; position: fixed; z-index: 100;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center; align-items: center;
+    }
+
+    .media-content {
+      background: #fff; padding: 20px;
+      max-width: 90%; border-radius: 8px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      position: relative; text-align: center;
+    }
+
+    .close-button {
+      position: absolute; top: 10px; right: 15px;
+      font-size: 28px; cursor: pointer; color: #333;
+    }
+
+    #mediaPlayer {
+  text-align: center;
+}
+
+.media-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.media-thumb {
+  width: 150px;
+  height: auto;
+  cursor: pointer;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  transition: transform 0.2s;
+}
+
+.media-thumb:hover {
+  transform: scale(1.05);
+}
+
   </style>
 </head>
 <body>
 
-  <div class="turret">
-    <div class="turret-base"></div>
-    <div class="turret-barrel" id="barrel"></div>
-  </div>
+  <img src="tank.png" alt="Tank" class="tank-image" />
+  <div class="turret" id="barrel"></div>
 
   <div class="nav-bar">
-    <button data-page="about">About</button>
-    <button data-page="projects">Projects</button>
-    <button data-page="contact">Contact</button>
+    <button data-page="about"><i class="fas fa-crosshairs pulse-icon"></i> About</button>
+    <button data-page="projects"><i class="fas fa-crosshairs pulse-icon"></i> Projects</button>
+    <button data-page="contact"><i class="fas fa-crosshairs pulse-icon"></i> Contact</button>
+    <button id="mediaButton"><i class="fas fa-crosshairs pulse-icon"></i> Media</button>
   </div>
 
   <div class="projectile" id="projectile"></div>
@@ -141,118 +146,167 @@
     <p>Click a button to navigate.</p>
   </div>
 
-  <audio id="fireSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9c6ff5f639.mp3?filename=gun-shot-140236.mp3"></audio>
+  <!-- Media Modal -->
+  <div id="mediaModal" class="media-modal">
+    <div class="media-content">
+      <span class="close-button" id="mediaClose">&times;</span>
+      <h2>Featured Videos</h2>
+      <div class="media-grid">
+        <img class="media-thumb" src="https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg" data-youtube="true" data-full="https://www.youtube.com/embed/dQw4w9WgXcQ" />
+        <img class="media-thumb" src="your-thumbnail.jpg" data-full="your-video.mp4" />
+      </div>
+    </div>
+  </div>
 
-  <script>
-    const barrel = document.getElementById("barrel");
-    const projectile = document.getElementById("projectile");
-    const pageContent = document.getElementById("pageContent");
-    const fireSound = document.getElementById("fireSound");
-    const muzzle = document.getElementById("muzzle");
-    const spark = document.getElementById("spark");
+  <!-- Viewer Modal -->
+  <div id="mediaViewer" class="media-modal">
+    <div class="media-content">
+      <span class="close-button" id="viewerClose">&times;</span>
+      <div id="mediaDisplay"></div>
+    </div>
+  </div>
 
-    function getBarrelTip() {
-      const rect = barrel.getBoundingClientRect();
-      const angle = parseFloat(barrel.style.transform.replace(/[^\d.-]/g, '')) || 0;
-      const x = rect.left + Math.cos(angle) * barrel.offsetWidth;
-      const y = rect.top + rect.height / 2 + Math.sin(angle) * barrel.offsetWidth;
-      return { x, y, angle };
-    }
+  <!-- Sounds -->
+  <audio id="fireSound" src="firing1.mp3" preload="auto"></audio>
+  <audio id="impactSound" src="impact.mp3" preload="auto"></audio>
 
-    function getBarrelBase() {
-      const rect = barrel.getBoundingClientRect();
-      return {
-        x: rect.left,
-        y: rect.top + rect.height / 2
-      };
-    }
+<script>
+  const barrel = document.getElementById("barrel");
+  const projectile = document.getElementById("projectile");
+  const fireSound = document.getElementById("fireSound");
+  const muzzle = document.getElementById("muzzle");
+  const spark = document.getElementById("spark");
+  const impactSound = document.getElementById("impactSound");
+  const pageContent = document.getElementById("pageContent");
 
-    window.addEventListener("mousemove", (e) => {
-      const { x, y } = getBarrelBase();
-      const dx = e.clientX - x;
-      const dy = e.clientY - y;
-      const angle = Math.atan2(dy, dx);
-      barrel.style.transform = `rotate(${angle}rad)`;
+  const getBarrelBase = () => {
+    const rect = barrel.getBoundingClientRect();
+    return { x: rect.left, y: rect.top + rect.height / 2 };
+  };
+
+  const getBarrelTip = () => {
+    const rect = barrel.getBoundingClientRect();
+    const transform = barrel.style.transform;
+    const angle = transform.includes('rotate') ? parseFloat(transform.match(/rotate\(([-\d.]+)rad\)/)?.[1]) || 0 : 0;
+    return {
+      x: rect.left + Math.cos(angle) * barrel.offsetWidth,
+      y: rect.top + rect.height / 2 + Math.sin(angle) * barrel.offsetWidth,
+      angle
+    };
+  };
+
+  window.addEventListener("mousemove", (e) => {
+    const base = getBarrelBase();
+    const angle = Math.atan2(e.clientY - base.y, e.clientX - base.x);
+    barrel.style.transform = `rotate(${angle}rad)`;
+  });
+
+  const fireProjectile = (button, page) => {
+    const start = getBarrelTip();
+    const rect = button.getBoundingClientRect();
+    const endX = rect.left + rect.width / 2;
+    const endY = rect.top + rect.height / 2;
+
+    projectile.style.left = `${start.x}px`;
+    projectile.style.top = `${start.y}px`;
+    projectile.style.display = "block";
+
+    muzzle.style.left = `${start.x - 10}px`;
+    muzzle.style.top = `${start.y - 10}px`;
+    muzzle.style.opacity = 1;
+    setTimeout(() => muzzle.style.opacity = 0, 100);
+
+    fireSound.currentTime = 0;
+    fireSound.play();
+
+    let step = 0;
+    const steps = 80;
+    const dx = endX - start.x;
+    const dy = endY - start.y;
+
+    const interval = setInterval(() => {
+      step++;
+      const px = start.x + dx * (step / steps);
+      const py = start.y + dy * (step / steps);
+      projectile.style.left = `${px}px`;
+      projectile.style.top = `${py}px`;
+
+      const smoke = document.createElement("div");
+      smoke.className = "smoke";
+      smoke.style.left = `${px + (Math.random() * 4 - 2)}px`;
+      smoke.style.top = `${py + (Math.random() * 4 - 2)}px`;
+      document.body.appendChild(smoke);
+      setTimeout(() => smoke.remove(), 500);
+
+      if (step >= steps) {
+        clearInterval(interval);
+        projectile.style.display = "none";
+        spark.style.left = `${endX - 10}px`;
+        spark.style.top = `${endY - 10}px`;
+        spark.style.opacity = 1;
+        setTimeout(() => spark.style.opacity = 0, 150);
+        impactSound.currentTime = 0;
+        impactSound.play();
+        loadPage(page);
+      }
+    }, 16);
+  };
+
+  document.querySelectorAll(".nav-bar button").forEach(button => {
+    button.addEventListener("click", () => {
+      const page = button.dataset.page;
+      if (page) fireProjectile(button, page);
+      else if (button.id === "mediaButton") fireProjectile(button, "media");
     });
+  });
+function loadPage(pageName) {
+  if (pageName === "media") {
+    pageContent.innerHTML = `
+      <div id="mediaPlayer" style="text-align:center; margin-bottom: 20px;">
+        <iframe width="560" height="315"
+                src="https://www.youtube.com/embed/uPBKXrFBynM"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+      </div>
+      <div class="media-grid">
+        <img class="media-thumb" data-youtube-id="uPBKXrFBynM" />
+        <img class="media-thumb" data-youtube-id="13SCavtSMC0" />
+      </div>
+    `;
 
-    function fireProjectile(targetButton, pageName) {
-      const { x: startX, y: startY, angle } = getBarrelTip();
+    const mediaPlayer = document.getElementById("mediaPlayer");
 
-      const endRect = targetButton.getBoundingClientRect();
-      const endX = endRect.left + endRect.width / 2;
-      const endY = endRect.top + endRect.height / 2;
+    document.querySelectorAll(".media-thumb").forEach(thumb => {
+      const videoId = thumb.dataset.youtubeId;
 
-      projectile.style.left = `${startX}px`;
-      projectile.style.top = `${startY}px`;
-      projectile.style.display = "block";
+      // Set the thumbnail image automatically
+      thumb.src = `https://img.youtube.com/vi/${videoId}/0.jpg`;
 
-      // Muzzle flash
-      muzzle.style.left = `${startX - 10}px`;
-      muzzle.style.top = `${startY - 10}px`;
-      muzzle.style.opacity = 1;
-      setTimeout(() => (muzzle.style.opacity = 0), 100);
-
-      // Play sound
-      fireSound.currentTime = 0;
-      fireSound.play();
-
-      const dx = endX - startX;
-      const dy = endY - startY;
-      const steps = 40;
-      let step = 0;
-
-      const interval = setInterval(() => {
-        step++;
-        const progress = step / steps;
-        const px = startX + dx * progress;
-        const py = startY + dy * progress;
-        projectile.style.left = `${px}px`;
-        projectile.style.top = `${py}px`;
-
-        // Smoke puff
-        const smoke = document.createElement("div");
-        smoke.className = "smoke";
-        smoke.style.left = `${px + Math.random() * 4 - 2}px`;
-        smoke.style.top = `${py + Math.random() * 4 - 2}px`;
-        document.body.appendChild(smoke);
-        setTimeout(() => smoke.remove(), 500);
-
-        if (step >= steps) {
-          clearInterval(interval);
-          projectile.style.display = "none";
-
-          // Impact
-          spark.style.left = `${endX - 10}px`;
-          spark.style.top = `${endY - 10}px`;
-          spark.style.opacity = 1;
-          setTimeout(() => (spark.style.opacity = 0), 150);
-
-          loadPage(pageName);
-        }
-      }, 16);
-    }
-
-    document.querySelectorAll(".nav-bar button").forEach(button => {
-      button.addEventListener("click", (e) => {
-        fireProjectile(button, button.dataset.page);
+      // Add click handler to load video in the player
+      thumb.addEventListener("click", () => {
+        mediaPlayer.innerHTML = `
+          <iframe width="560" height="315"
+                  src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+        `;
       });
     });
 
-    function loadPage(pageName) {
-      switch (pageName) {
-        case "about":
-          pageContent.innerHTML = "<h1>About</h1><p>This is the About section. Your background, skills, and mission go here.</p>";
-          break;
-        case "projects":
-          pageContent.innerHTML = "<h1>Projects</h1><p>These are some projects I've worked on. Add portfolio links or screenshots here.</p>";
-          break;
-        case "contact":
-          pageContent.innerHTML = "<h1>Contact</h1><p>Reach out at: <a href='mailto:you@example.com'>you@example.com</a></p>";
-          break;
-        default:
-          pageContent.innerHTML = "<h1>Welcome</h1><p>Click a button to navigate.</p>";
-      }
+      return;
     }
-  </script>
+
+    const pages = {
+      about: `<h1>About</h1><p>This is the About section. Your background, skills, and mission go here.</p>`,
+      projects: `<h1>Projects</h1><p>These are some projects I've worked on. Add portfolio links or screenshots here.</p>`,
+      contact: `<h1>Contact</h1><p>Reach out at: <a href="mailto:you@example.com">you@example.com</a></p>`
+    };
+
+    pageContent.innerHTML = pages[pageName] || `<h1>Welcome</h1><p>Click a button to navigate.</p>`;
+  }
+</script>
+
 </body>
 </html>
