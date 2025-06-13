@@ -259,52 +259,38 @@
       else if (button.id === "mediaButton") fireProjectile(button, "media");
     });
   });
-function loadPage(pageName) {
-  if (pageName === "media") {
-    pageContent.innerHTML = `
-      <div id="mediaPlayer" style="text-align:center; margin-bottom: 20px;">
-        <iframe width="560" height="315"
-                src="https://www.youtube.com/embed/uPBKXrFBynM"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-      </div>
-      <div class="media-grid">
-        <img class="media-thumb" data-youtube-id="uPBKXrFBynM" />
-        <img class="media-thumb" data-youtube-id="13SCavtSMC0" />
-      </div>
-    `;
+  
 
-    const mediaPlayer = document.getElementById("mediaPlayer");
+  function loadPage(pageName) {
+    fetch(`${pageName}.html`)
+      .then(response => {
+        if (!response.ok) throw new Error("Page not found");
+        return response.text();
+      })
+      .then(html => {
+        pageContent.innerHTML = html;
 
-    document.querySelectorAll(".media-thumb").forEach(thumb => {
-      const videoId = thumb.dataset.youtubeId;
-
-      // Set the thumbnail image automatically
-      thumb.src = `https://img.youtube.com/vi/${videoId}/0.jpg`;
-
-      // Add click handler to load video in the player
-      thumb.addEventListener("click", () => {
-        mediaPlayer.innerHTML = `
-          <iframe width="560" height="315"
-                  src="https://www.youtube.com/embed/${videoId}?autoplay=1"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen></iframe>
-        `;
+        // Extra setup for media thumbnails
+        if (pageName === "media") {
+          const mediaPlayer = document.getElementById("mediaPlayer");
+          document.querySelectorAll(".media-thumb").forEach(thumb => {
+            const videoId = thumb.dataset.youtubeId;
+            thumb.src = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+            thumb.addEventListener("click", () => {
+              mediaPlayer.innerHTML = `
+                <iframe width="560" height="315"
+                        src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+              `;
+            });
+          });
+        }
+      })
+      .catch(error => {
+        pageContent.innerHTML = `<h1>Error</h1><p>${error.message}</p>`;
       });
-    });
-
-      return;
-    }
-
-    const pages = {
-      about: `<h1>About</h1><p>This is the About section. Your background, skills, and mission go here.</p>`,
-      projects: `<h1>Projects</h1><p>These are some projects I've worked on. Add portfolio links or screenshots here.</p>`,
-      contact: `<h1>Contact</h1><p>Reach out at: <a href="mailto:you@example.com">you@example.com</a></p>`
-    };
-
-    pageContent.innerHTML = pages[pageName] || `<h1>Welcome</h1><p>Click a button to navigate.</p>`;
   }
 </script>
 
