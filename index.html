@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; overflow: hidden; font-family: sans-serif; background: linear-gradient(135deg, #d2cbcb, #262424); }
+    html, body { height: 100%; margin: 0; overflow-x: auto; overflow-y: auto; overflow: auto; font-family: sans-serif; background: linear-gradient(135deg, #d2cbcb, #262424); }
 
     .tank-image {
       position: fixed; bottom: 30px; left: 50px;
@@ -72,13 +72,20 @@
       to { opacity: 0; transform: scale(1.5); }
     }
 
-    .page-content {
-      position: absolute; top: 20px; left: 140px;
-      max-width: 600px; padding: 20px;
-      background: #fff; border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      z-index: 15;
-    }
+  .page-content {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 180px; /* Leaves space for nav-bar */
+  max-width: calc(100% - 220px); /* Flexibly adjusts */
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  z-index: 15;
+  transition: opacity 0.5s ease;
+}
+
 
     .media-modal {
       display: none; position: fixed; z-index: 100;
@@ -122,6 +129,12 @@
 .media-thumb:hover {
   transform: scale(1.05);
 }
+
+.page-content {
+  transition: opacity 0.5s ease;
+}
+
+
 
   </style>
 </head>
@@ -262,6 +275,9 @@
   
 
   function loadPage(pageName) {
+  pageContent.style.opacity = 0; // Fade out
+
+  setTimeout(() => {
     fetch(`${pageName}.html`)
       .then(response => {
         if (!response.ok) throw new Error("Page not found");
@@ -270,7 +286,14 @@
       .then(html => {
         pageContent.innerHTML = html;
 
-        // Extra setup for media thumbnails
+        // Fade in new content
+        pageContent.style.opacity = 0;
+        requestAnimationFrame(() => {
+          pageContent.style.transition = 'opacity 0.5s';
+          pageContent.style.opacity = 1;
+        });
+
+        // Media setup
         if (pageName === "media") {
           const mediaPlayer = document.getElementById("mediaPlayer");
           document.querySelectorAll(".media-thumb").forEach(thumb => {
@@ -290,8 +313,11 @@
       })
       .catch(error => {
         pageContent.innerHTML = `<h1>Error</h1><p>${error.message}</p>`;
+        pageContent.style.opacity = 1;
       });
-  }
+  }, 200); // Delay to match impact timing
+}
+
 </script>
 
 </body>
