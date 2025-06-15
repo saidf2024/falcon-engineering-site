@@ -17,8 +17,7 @@
   z-index: 10;
   pointer-events: none;
   user-select: none;
-}
-
+  }
 
     .turret {
       position: fixed; left: 120px; bottom: 100px;
@@ -161,6 +160,23 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .tank-container {
+    height: 150px;
+  }
+
+  .tank-image {
+    left: 20px;
+    width: 100px;
+  }
+
+  .turret {
+    left: 80px;
+    bottom: 60px;
+    width: 45px;
+  }
 }
 
 
